@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<!-- 
+
+
+
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+please dont judge my code
+
+
+
+
+-->
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Old Schedule Generator</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <!-- <script src="index.js"></script> -->
+
+
+
+    <h1>Old Schedule Maker</h1>
+
+    <div style="display: flex; justify-content: space-between;">
+      <table id="schedule">
+        <thead>
+          <tr>
+            <th class="time-col"></th>
+            <th class="top-row">Monday</th>
+            <th class="top-row">Tuesday</th>
+            <th class="top-row">Wednesday</th>
+            <th class="top-row">Thursday</th>
+            <th class="top-row">Friday</th>
+            <th class="top-row">Saturday</th>
+            <th class="top-row">Sunday</th>
+          </tr>
+        </thead>
+        <tbody id="schedule-body">
+        </tbody>
+      </table>
+
+
+
+
+
+
+      <div style="border: 1px solid black; border-radius: 5px; padding: 15px; margin-left: 50px;">
+        <h2>Add Class</h2>
+        <form>
+          <label>Text</label>
+          <textarea rows="4" cols="40" placeholder="ENG 3000-A01
+50321 Lecture
+10:30 am-11:20 am
+EITC E3 220" wrap="hard" maxlength="160"></textarea>
+
+          <br><br><br>
+
+          <input type="button" onclick="formSetMWF()" value="Set MWF"> 
+          <input type="button" onclick="formSetTR()" value="Set TR">
+          <!-- <input type="button" onclick="formSetTR()" value="Set None"> -->
+          <br><br>
+
+          <input type="checkbox" name="days" id="cb-mon" value="Monday">
+          <label>Monday</label><br>
+          <input type="checkbox" name="days" id="cb-tue" value="Tuesday">
+          <label>Tuesday</label><br>
+          <input type="checkbox" name="days" id="cb-wed" value="Wednesday">
+          <label>Wednesday</label><br>
+          <input type="checkbox" name="days" id="cb-thu" value="Thursday">
+          <label>Thursday</label><br>
+          <input type="checkbox" name="days" id="cb-fri" value="Friday">
+          <label>Friday</label><br>
+          <input type="checkbox" name="days" id="cb-sat" value="Saturday">
+          <label>Saturday</label><br>
+          <input type="checkbox" name="days" id="cb-sun" value="Sunday">
+          <label>Sunday</label><br>
+
+          <br>
+
+          <label>Start Time</label>
+          <input type="time" name="start-time" /><br>
+          
+          <label>Duration</label>
+          <select id="duration" name="duration">
+            <option value="none">----</option>
+            <option value="1h00m">1h00m</option>
+            <option value="1h15m">1h15m</option>
+            <option value="2h45m">2h45m</option>
+          </select>
+
+          <label>End Time</label>
+          <input type="time" name="end-time" /><br>
+          
+          <input type="submit" value="Add Class">
+
+
+
+          <input type="button" value="RESET">
+        </form>
+      </div>
+    </div>
+
+
+
+<script>
+  const schedule = document.getElementById("schedule-body");
+
+
+  function formSetMWF() {
+    document.getElementById("cb-mon").checked = true;
+    document.getElementById("cb-tue").checked = false;
+    document.getElementById("cb-wed").checked = true;
+    document.getElementById("cb-thu").checked = false;
+    document.getElementById("cb-fri").checked = true;
+    document.getElementById("cb-sat").checked = false;
+    document.getElementById("cb-sun").checked = false;
+    document.getElementById("duration").value = "1h00m"
+  }
+
+  function formSetTR() {
+    document.getElementById("cb-mon").checked = false;
+    document.getElementById("cb-tue").checked = true;
+    document.getElementById("cb-wed").checked = false;
+    document.getElementById("cb-thu").checked = true;
+    document.getElementById("cb-fri").checked = false;
+    document.getElementById("cb-sat").checked = false;
+    document.getElementById("cb-sun").checked = false;
+    document.getElementById("duration").value = "1h15m"
+  }
+
+  
+
+
+  function generateScheduleTable() {
+    const startTime = 0 * 60; // 5:00
+    const endTime = 24 * 60; // 17:00
+    const interval = 5; // 5 min intervals
+    const tableBody = document.getElementById("schedule-body");
+
+    for (let time = startTime; time < endTime; time += interval) {
+      // Calculate the time in hours and minutes
+      const hours = Math.floor(time / 60);
+      const minutes = time % 60;
+      // const displayTime = `${hours % 12 || 12}:${minutes.toString().padStart(2, '0')}${hours < 12 ? 'am' : 'pm'}`;
+      const displayTime = `${hours % 12 || 12}${hours < 12 ? 'am' : 'pm'}`;
+
+      // Create a new row
+      const row = document.createElement("tr");
+      row.id = hours + ":" + minutes.toString().padStart(2, "0")
+      
+
+      // if (minutes == 0) {
+      //   // Create the first cell for the time label
+      //   const timeCell = document.createElement("th");
+      //   timeCell.textContent = displayTime;
+      //   timeCell.rowSpan = "12";
+      //   row.appendChild(timeCell);
+        
+      // }
+
+      const timeCell = document.createElement("th");
+      if (minutes == 0) {
+        timeCell.textContent = displayTime;
+        timeCell.rowSpan = "12";
+      }
+      else {
+        timeCell.classList.add("hidden");
+      }
+      row.appendChild(timeCell);
+
+      // Create empty cells for each day of the week
+      for (let day = 0; day < 7; day++) {
+        const cell = document.createElement("td");
+        row.appendChild(cell);
+      }
+      
+
+      // Append the row to the table body
+      tableBody.appendChild(row);
+    }
+  }
+
+  // Call the function to generate the table
+  generateScheduleTable();
+
+  function timeToMin(time) {
+    const hours = Number(time.split(":")[0])
+    const min = Number(time.split(":")[1])
+
+    return hours * 60 + min
+  }
+  function minToTime(min) {
+    const hours = Math.floor(min / 60);
+    const minutes = min % 60;
+
+    return `${hours}:${minutes.toString().padStart(2, '0')}`;
+  }
+
+  function refreshHiddenTimes() {
+    // hides hour slot rows that are NOT used
+    // shows hour slot rows that ARE used
+    // idk check range from 05:00 to 23:55
+    let currentHour = "";
+    let usedHourSlot = false;
+
+    let firstUsedHour = "";
+    let lastUsedHour = "";
+
+    
+    for (let time = 0 * 60; time < 24 * 60; time += 5) {
+      
+
+      if (time % 60 == 0) {
+        // on the hour
+        if (currentHour != "") {
+
+
+          if (usedHourSlot) {
+            // hour is used! show row!
+            // console.log(`USING ${currentHour}!`)
+
+            if (firstUsedHour == "") {
+              firstUsedHour = currentHour;
+            }
+            if (currentHour > lastUsedHour) {
+              lastUsedHour = currentHour;
+            }
+
+          }
+          else {
+            // hour is not used! hide row!
+            // console.log(`not using ${currentHour}!`)
+          }
+
+
+
+        }
+
+
+        // currentHour = `${Math.floor(time / 60)}:00`;
+        currentHour = time;
+        usedHourSlot = false;
+      }
+      if (currentHour != "") {
+        let timeRow = document.getElementById(minToTime(time));
+
+        const foundCells = timeRow.querySelectorAll('.active');
+        foundCells.forEach(cell => {
+          usedHourSlot = true;
+
+          if (timeToMin(cell.getAttribute('end-time')) > lastUsedHour) {
+            lastUsedHour = Math.floor(timeToMin(cell.getAttribute('end-time')) / 60) * 60
+          }
+        })
+      }
+    }
+
+    // console.log(`Showing between ${firstUsedHour} and ${lastUsedHour}`);
+    for (let time = 0 * 60; time < 24 * 60; time += 5) {
+      if (firstUsedHour <= time && time < lastUsedHour + 60) {
+        // show row
+        document.getElementById(minToTime(time)).classList.remove("hidden");
+      }
+      else {
+        // hide row
+        document.getElementById(minToTime(time)).classList.add("hidden");
+      }
+    }
+
+  }
+
+  function addClass(day, startTime, endTime, text) {
+    let startRow = document.getElementById(startTime);
+
+    // calculate rowSpan = minutes long / 5
+    const deltaMin = timeToMin(endTime) - timeToMin(startTime);
+
+    
+    cell = startRow.children[day];
+    cell.classList.add("active")
+    cell.innerHTML = text;
+    cell.rowSpan = Math.floor(deltaMin / 5).toString();
+
+    cell.setAttribute("start-time", startTime);
+    cell.setAttribute("end-time", endTime);
+
+    // fill cells below (for duration) with class "overlapped"
+    for (let time = timeToMin(startTime) + 5; time < timeToMin(endTime); time += 5) {
+      startRow = document.getElementById(minToTime(time));
+      cell = startRow.children[day];
+      cell.classList.add("hidden");
+    }
+
+
+    refreshHiddenTimes();
+  }
+
+
+  
+  addClass(1, "9:30", "10:20", "ECE 4260-A01<br>51583 Lecture<br>9:30 am-10:20 am<br>HUMAN ECOLOGY 300");
+  addClass(3, "9:30", "10:20", "ECE 4260-A01<br>51583 Lecture<br>9:30 am-10:20 am<br>HUMAN ECOLOGY 300");
+  addClass(5, "9:30", "10:20", "ECE 4260-A01<br>51583 Lecture<br>9:30 am-10:20 am<br>HUMAN ECOLOGY 300");
+
+  addClass(1, "11:30", "12:20", "ECE 3760-A01<br>50861 Lecture<br>11:30 am-12:20 pm<br>HELEN GLASS CENTRE 370");
+  addClass(3, "11:30", "12:20", "ECE 3760-A01<br>50861 Lecture<br>11:30 am-12:20 pm<br>HELEN GLASS CENTRE 370");
+  addClass(5, "11:30", "12:20", "ECE 3760-A01<br>50861 Lecture<br>11:30 am-12:20 pm<br>HELEN GLASS CENTRE 370");
+
+  addClass(2, "10:00", "11:15", "ECE 3700-A01<br>50857 Lecture<br>10:00 am-11:15 am<br>EDUCATION 327");
+  addClass(4, "10:00", "11:15", "ECE 3700-A01<br>50857 Lecture<br>10:00 am-11:15 am<br>EDUCATION 327");
+
+  addClass(2, "11:30", "12:45", "MATH 2136-A01<br>64294 Lecture<br>11:30 am-12:45 pm<br>ARMES 200");
+  addClass(4, "11:30", "12:45", "MATH 2136-A01<br>64294 Lecture<br>11:30 am-12:45 pm<br>ARMES 200");
+
+  addClass(4, "13:00", "14:15", "MATH 2136-B02<br>65100 Tutorial<br>1:00 pm-2:15 pm<br>TIER 215");
+
+  addClass(2, "14:30", "17:15", "ECE 3760-B02<br>50863 Laboratory<br>2:30 pm-5:15 pm<br>EITC E3 528");
+  addClass(3, "14:30", "17:15", "ECE 4260-B02<br>51584 Laboratory<br>2:30 pm-5:15 pm<br>STANLEY PAULEY ENG BUILDING SP123");
+  addClass(4, "14:30", "17:15", "ECE 3700-B02<br>51900 Laboratory<br>2:30 pm-5:15 pm<br>EITC E3 516");
+
+
+  // refreshHiddenTimes();
+</script>
+  </body>
+</html>
